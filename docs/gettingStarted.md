@@ -78,7 +78,7 @@ cd $STONES_HOME/git/GsDevKit_stones/bin
 
 ```
 
-#### Add environment variables to your profile]
+#### Add environment variables to your profile
 
 If your shell is "bash" which is likely the case on ubuntu and macOS 13 and earlier, your user profile will be "~/.bash_profile". 
 
