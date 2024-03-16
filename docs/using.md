@@ -1,5 +1,9 @@
 # GsDevKit_stones
 
+- [Introduction](docs.md)
+- [Getting Started](gettingStarted.md)
+- [Using GsDevKit_stones](using.md)
+
 # Using GsDevKit_stones
 
 ## Housekeeping

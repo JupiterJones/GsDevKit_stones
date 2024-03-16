@@ -2,7 +2,7 @@
 
 - [Introduction](docs.md)
 - [Getting Started](gettingStarted.md)
-- [Using GsDevKit_stones](usage.md)
+- [Using GsDevKit_stones](using.md)
 
 # Getting started
 
@@ -18,10 +18,10 @@ Note: It's also possible to run GemStone on Windows via [WSL](https://ubuntu.com
 ## Installing GsDevKit_stones
 
 ### Summary
-1. [Create the install location]
-2. [Clone the project from GitHub]
-3. [Run the install script]
-4. [Add environment variables to your profile]
+1. [Create the install location](#create-the-install-location)
+2. [Clone the project from GitHub](#clone-the-project-from-github)
+3. [Run the install script](#run-the-install-script)
+4. [Add environment variables to your profile](#add-environment-variables-to-your-profile)
 
 Commands used in this section (for those who don't like to read)
 

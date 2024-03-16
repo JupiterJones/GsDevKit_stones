@@ -2,7 +2,7 @@
 
 - [Introduction](docs.md)
 - [Getting Started](gettingStarted.md)
-- [Using GsDevKit_stones](usage.md)
+- [Using GsDevKit_stones](using.md)
 
 # Introduction
 
