@@ -37,9 +37,9 @@ cd $STONES_HOME/git/GsDevKit_stones/bin
 ```
 NOTE: The above commands don't show you how to [add environment variables to your user profile]
 
-### Step by Step
+## Step by Step
 
-#### Create the install location
+### Create the install location
 
 Decide where you are going to install GsDevKit_stones.
 
@@ -70,7 +70,7 @@ cd $STONES_HOME/git
 git clone git@github.com:GsDevKit/GsDevKit_stones.git
 ```
 
-#### Run the install script
+### Run the install script
 In the same terminal...
 ```
 cd $STONES_HOME/git/GsDevKit_stones/bin
@@ -78,7 +78,7 @@ cd $STONES_HOME/git/GsDevKit_stones/bin
 
 ```
 
-#### Add environment variables to your profile
+### Add environment variables to your profile
 
 If your shell is "bash" which is likely the case on ubuntu and macOS 13 and earlier, your user profile will be "~/.bash_profile". 
 
