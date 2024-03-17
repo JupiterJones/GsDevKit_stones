@@ -53,11 +53,11 @@ I use my development machine every day, but only login to production servers for
 
 Since the GsDevKit_stones and superDoit projects will simply be cloned from Github, I like to put them in a “git” directory. Having a “git” directory reminds me that everything in it is a git project.
 
-For these reasons, I typically install all things GsDevKit in the directory `/opt/gsDevKit`, and clone GsDevKit_stones in the directory `/opt/gsDevKit/git`
+For these reasons, I typically install all things GsDevKit in the directory `/opt/GsDevKit`, and clone GsDevKit_stones in the directory `/opt/GsDevKit/git`
 
 In a terminal...
 ```
-export STONES_HOME=/opt/gsDevKit
+export STONES_HOME=/opt/GsDevKit
 
 sudo mkdir -p $STONES_HOME/git
 sudo chown -R $USER $STONES_HOME
@@ -96,6 +96,7 @@ export STONES_DATA_HOME="\$STONES_HOME/data"
 export PATH="\$STONES_HOME/git/superDoit/bin:\$STONES_HOME/git/GsDevKit_stones/bin:\$PATH"
 EOF
 ```
+You may have noticed that we snuck in another environment variable `STONES_DATA_HOME`. This is where GsDevKit_stones will keep it's registry information. You can put it anywhere you like, but as I mentioned, I'm putting ALL GsDevKit_stones related stuff in one place. Once you have a better understanding of the [Registry](using.md#registry), it may make more sense to you to locate `STONES_DATA_HOME` somewhere else.
 
 Close your terminal and open a new one. Enter...
 ```

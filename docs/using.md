@@ -110,10 +110,22 @@ registryReport.solo --registry=jupiter.local
 
 This is the directory where versions of GemStone are installed. You may have 10 projects you are working on that all use the same version of GemStone. You only want to install the GemStone product once.
 
-In the [create the install location](gettingStarted.md#create-the-install-location) section of getting started, I planned to put all my GsDevKit_stones related stuff in `/opt/GsDevKit` so I will continue that here by installing my versions of GemStone in the directory `/opt/gsDevKit/gemstone`
+In the [create the install location](gettingStarted.md#create-the-install-location) section of getting started, I planned to put all my GsDevKit_stones related stuff in `/opt/GsDevKit` so I will continue that here by installing my versions of GemStone in the directory `/opt/GsDevKit/gemstone`
 
 So let's tell the registry where we want to install GemStone. In a terminal...
 ```
-registerProductDirectory.solo /opt/gsDevKit/gemstone
+registerProductDirectory.solo /opt/GsDevKit/gemstone
 ```
+We haven't specified a registry using `--registry=myRegistryName` so it will use the default registry.
+
+Again, you'll see your registry .ston file and you'll see that the product directory has been added.
+
+Let's install a version of GemStone. In this case we will install version 3.7.1. 
+In a terminal...
+```
+downloadGemStone.solo 3.7.1
+```
+We haven't specified a registry using `--registry=myRegistryName` so it will use the default registry.
+
+You will now have version 3.7.1 of GemStone installed in the product directory you specified.
 
