@@ -145,4 +145,4 @@ rowanLoadedCommitId
 
 Everything is up and running!
 
-It's time to start [using GsDevKit_stones](usage.md)
+It's time to start [using GsDevKit_stones](using.md)
