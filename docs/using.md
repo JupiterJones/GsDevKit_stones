@@ -6,39 +6,28 @@
 
 # Using GsDevKit_stones
 
-## Housekeeping
-Regardless of whether you install GemStone with or without GsDevKit_stones, it will need a place to store its lock files. So let's start by setting that up.
-
-In a terminal...
-```shell
-sudo mkdir -p /opt/gemstone
-sudo chmod oug+rwx /opt/gemstone
-sudo mkdir /opt/gemstone/locks
-sudo chmod oug+rwx /opt/gemstone/locks
-
-```
-Note: This shouldn't have to be done by us. Pull request submitted.
-
 ## Terminology & Usage
 
 ### Registry
 In the introduction I mentioned that you can teach GsDevKit_stones how you work with GemStone. By this I mean letting it know where you keep certain things including:
 - where to install versions of GemStone
 - where to install your stones
-- where your projects keep their git repos
+- where you store the git repos used by your projects
 
-So GsDevKit_stones can keep track of this information, it maintains registries.
+To keep track of this information, GsDevKit_stones uses one or more registries.
 
-You give each registry a name so you can easily identify it in a way that makes sense to you. 
+Each registry has a name so you can easily identify it in a way that makes sense to you. 
 
 There is also the concept of a "default" registry which is named after your machines hostname. The hostname of my development machine is `jupiter.local` so my default registry will be named "jupiter.local"
 
-You can tell GsDevKit_stones to use any of your named registries as the default by setting the environment variable:
+The handy thing about using a default registry, is that you don't have to explicitly tell GsDevKit_stones commands which registry you're referring to each time. That saves a little typing.
+
+You can tell GsDevKit_stones to use any of your named registries as the default, by setting the environment variable:
 ```
 STONES_DEFAULT_REGISTRY=myRegistryName
 ```
 
-The handy thing about using a default registry, is that you don't have to explicitly tell GsDevKit_stones commands which registry you're referring to each time. That saves a little typing.
+If this environment variable is not set, then the registry named after your host machine will be the default.
 
 **So, why do I want a registry?**
 
@@ -99,11 +88,6 @@ registryReport.solo --registry=jupiter.local
 For now, let's delete the "myProject" registry and work with the default. In a terminal...
 ```
 deleteRegistry.solo myProject
-```
-
-To see all the information in a registry, use the registryReport.solo script and tell it which registry you're interested in. In a terminal... (Remember to change the hostname to match yours)
-```
-registryReport.solo --registry=jupiter.local
 ```
 
 ### Product Directory
