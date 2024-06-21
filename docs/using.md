@@ -8,6 +8,10 @@
 
 ## Terminology & Usage
 
+- [Registry](#registry)
+- [Product Directory](#product-directory)
+- [Project Directory](#project-directory)
+
 ### Registry
 In the introduction I mentioned that you can teach GsDevKit_stones how you work with GemStone. By this I mean letting it know where you keep certain things including:
 - where to install versions of GemStone
@@ -113,3 +117,49 @@ We haven't specified a registry using `--registry=myRegistryName` so it will use
 
 You will now have version 3.7.1 of GemStone installed in the product directory you specified.
 
+
+### Project Directory
+
+This is the equivalent of the old $ROWAN_PROJECTS_HOME.
+
+The project directory is where Rowan stores cloned repos that may be cloned while installing your project. See [Project repo structure](#project-repo-structure) for one example of how to use Project Directory.
+
+
+
+### Project repo structure
+
+The following is just rough notes…
+
+I hope what you get from this, is the idea that there's no __correct__ way to do this. Do it in exactly the way that suits your team and project requirements. This is just what I do with what I’ve learned so far. My focus is on “least amount of stuff to configure or remember”. I welcome any suggestions on how to simplify without losing flexibility. 
+
+So the thinking goes like this…
+
+You work on a bunch of different “**projects**”. Typically those projects are under git  management. You clone your project into $MYPROJECT
+
+I create directories in $MYPROJECT, for code:
+
+```	$MYPROJECT/src```
+
+This includes a __BaselineOfMYPROJECT__ for loading into Pharo
+
+The rowan spec:
+
+```	$MYPROJECT/rowan/specs/MYPROJECT.ston``` for loading into gemstone
+
+If I’m working on a seaside project I create the root for serving files to the web: ```	$MYPROJECT/www_root```
+
+and for nginx config:
+
+```	$MYPROJECT/nginx```
+
+Then a bunch of configuration and other projects specific stuff.
+
+I then create directories for stones (make sure /stones is included in .gitIgnore): ```$MYPROJECT/stones```
+
+…for the versions of gemstone installed for this project (make sure /gemstone is included in .gitIgnore): ```$MYPROJECT/gemstone```
+
+Having these here just gives the flexibility use .gitignore to choose to place project specific configurations (or anything) under git management.
+
+Finally I create a directory to store other cloned repos that may be cloned by rowan while installing your project. This is the equivalent of the old $ROWAN_PROJECTS_HOME: ```$MYPROJECT/git```
+
+It's the /git directory that the registry needs to know about in registry/projectsHome
