@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 #
-# test coverage for setting up a rowan v3 alpha dev environment
+# test coverage for setting up a rowan v3 dev environment
 #		registryReport.sol
 #		createRegistry.solo
 #		createProjectSet.solo
@@ -9,8 +9,9 @@
 #		backupStone.stone
 #		
 set -e
+set -x
 
-echo "***** test_rowanV3_alpha.sh *****"
+echo "***** test_rowanV3.sh *****"
 
 if [ ! -d $STONES_HOME/test_git ]; then
 	mkdir $STONES_HOME/test_git
@@ -18,11 +19,17 @@ else
 	rm -rf  $STONES_HOME/test_git/*
 fi
 
-export GS_VERS=370_rowanv3-Alpha1
-export stoneName=rowanv3_370
+if [ "$GS_VERS"x = "x" ] ; then
+	export GS_VERS=3.7.2
+elif	[ "$GS_VERS" != "3.7.2" ]; then
+	echo "skip test_rowanV3.sh for $GS_VERS ... only 3.7.2 or later should be supported"
+	exit 0
+fi
+
+export stoneName=test_rowanv3_372
 
 registry=test_rowanV3
-projectSet_common=rowanV3_common
+projectSet=rowan_V3_common
 projectSet_gs=rowanV3_gs
 projectSet_pharo=rowanV3_pharo
 
@@ -36,20 +43,12 @@ else
 	# GSDEVKIT_STONES_ROOT is $STONES_HOME/git ... the location that GsDevKit_stones 
 	#	was cloned when superDoit was installed
 	export GSDEVKIT_STONES_ROOT=$STONES_HOME/git/GsDevKit_stones
-	set +e
-	ping -c 1 git.gemtalksystems.com
-	status=$?
-	set -e
-	if [ $status = 0 ]; then
-		# in a GemStone development environment, so use the gs project sets
-		# which include the internal remotes (gs) using git.gemtalksystems.com
-		export urlType=gs
-	fi
+	export urlType=ssh
 fi
 
 createRegistry.solo $registry --ensure
 
-createProjectSet.solo --registry=$registry --projectSet=$projectSet_common \
+createProjectSet.solo --registry=$registry --projectSet=$projectSet \
   --from=$GSDEVKIT_STONES_ROOT/projectSets/$urlType/rowanV3_common.ston $*
 createProjectSet.solo --registry=$registry --projectSet=$projectSet_gs \
   --from=$GSDEVKIT_STONES_ROOT/projectSets/$urlType/rowanV3_gs.ston $*
@@ -67,16 +66,12 @@ if [ -d $STONES_HOME/$registry/pharo_projects ]; then
 fi
 
 # cloneProjectsFromProjectSet.solo will create the project directory if it does not already exist
-# read -p "Stop before first cloneProjectsFromProjectSet"
-cloneProjectsFromProjectSet.solo --registry=$registry --projectSet=$projectSet_common \
-  --projectDirectory=$STONES_HOME/$registry/common_projects $*
-# read -p "Stop before second cloneProjectsFromProjectSet"
 cloneProjectsFromProjectSet.solo --registry=$registry --projectSet=$projectSet_gs \
   --projectDirectory=$STONES_HOME/$registry/gs_projects $*
-# read -p "Stop before third cloneProjectsFromProjectSet"
+cloneProjectsFromProjectSet.solo --registry=$registry --projectSet=$projectSet \
+  --projectDirectory=$STONES_HOME/$registry/common_projects $*
 cloneProjectsFromProjectSet.solo --registry=$registry --projectSet=$projectSet_pharo \
   --projectDirectory=$STONES_HOME/$registry/pharo_projects $*
-# read -p "Stop after last cloneProjectsFromProjectSet"
 
 # create and register a product directory where GemStone product trees are kept.
 if [ ! -d $STONES_HOME/$registry/gemstone ]; then
@@ -89,7 +84,7 @@ registerProductDirectory.solo --registry=$registry --productDirectory=$STONES_HO
 registerProduct.solo -r $registry --fromDirectory=$STONES_HOME/gemstone
 
 # download $GS_VERS
-downloadGemStone.solo --registry=$registry 3.7.0 $GS_VERS $*
+downloadGemStone.solo --registry=$registry 3.7.2 $*
 #
 # populate the clientlibs directory with 64bit libraries for use by JfP
 #
@@ -105,7 +100,7 @@ fi
 
 registerStonesDirectory.solo --registry=$registry --stonesDirectory=$STONES_HOME/$registry/stones $*
 
-template="minimal_rowan"
+template="minimal_rowan3"
 
 # create a $GS_VERS Rowan stone and install GsDevKit_home
 createStone.solo --registry=$registry --template=$template $stoneName $GS_VERS $*
@@ -134,12 +129,12 @@ export ROWAN_PROJECTS_HOME=$STONES_HOME/test_git
 updateCustomEnv.solo --registry=$registry $stoneName --addKey=ROWAN_PROJECTS_HOME --value=$ROWAN_PROJECTS_HOME --restart $*
 
 # start netldi
-startNetldi.solo --registry=$registry $stoneName $*
+startNetldi.solo --registry=$registry $stoneName
 
 # run glist.solo for record of running stone and netldi
 gslist.solo -l
 
-if [ "$template" = "minimal_rowan" ] ; then
+if [ "$template" = "minimal_rowan3" ] ; then
 	cd $STONES_HOME/$registry/stones/$stoneName
 		
 	backupStone.stone --wait test_backup_2.dbf --compressed --safely --validate
@@ -150,29 +145,26 @@ if [ "$template" = "minimal_rowan" ] ; then
 	installProject.stone file:product/examples/GsCommands/projectsHome/GsCommands/rowan/specs/GsCommands.ston \
     --projectsHome=product/examples/GsCommands/projectsHome $*
 
-	echo "installing Announcements -- hack until we fix up reguired projects in RowanClientServices"
-	installProject.stone file:$STONES_HOME/$registry/common_projects/Announcements/rowan/specs/Announcements.ston  \
-		--projectsHome=$STONES_HOME/$registry/common_projects $*
-
-	echo "installing RemoteServiceReplication -- partial workaround for https://github.com/GemTalk/Rowan/issues/905"
-	installProject.stone file:$STONES_HOME/$registry/common_projects/RemoteServiceReplication/rowan/specs/RemoteServiceReplication.ston  \
-		--projectsHome=$STONES_HOME/$registry/common_projects $*
+	if [ "$urlType" = "ssh" ] ; then
+		# RemoteServiceReplication requires Announcements and is defined to use ssh clone
+		echo "installing RemoteServiceReplication -- partial workaround for https://github.com/GemTalk/Rowan/issues/905"
+		installProject.stone file:$STONES_HOME/$registry/common_projects/RemoteServiceReplication/rowan/specs/RemoteServiceReplication.ston  \
+			--projectsHome=$STONES_HOME/$registry/common_projects $*
+	fi
 
 	echo "installing RowanClientServices"
-	installProject.stone file:$STONES_HOME/$registry/gs_projects/RowanClientServices/rowan/specs/RowanClientServices.ston  \
+	installProject.stone file:$STONES_HOME/$registry/gs_projects/RowanClientServicesV3/rowan/specs/RowanClientServices.ston  \
+		--alias=RowanClientServicesV3 \
 		--projectsHome=$STONES_HOME/$registry/gs_projects $*
-
-	# attach stone to the Rowan projects that are part of the base image
-	attachRowanDevClones.stone --projectsHome=$STONES_HOME/$registry/gs_projects $*
 
 	# install GsDevKit_stones using Rowan installProject.stone script
 	echo "installing GsDevKit_stones"
 	installProject.stone file:$GSDEVKIT_STONES_ROOT/rowan/specs/GsDevKit_stones.ston \
-  	--projectsHome=$GSDEVKIT_STONES_ROOT/.. $*
+ 		--projectsHome=$GSDEVKIT_STONES_ROOT/.. $*
 fi
 
 # delete the stone
-cd $STONES_HOME
-deleteStone.solo -r $registry $stoneName $*
-gslist.solo -l
+#cd $STONES_HOME
+#deleteStone.solo -r $registry $stoneName $*
+#gslist.solo -l
 

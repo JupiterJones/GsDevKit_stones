@@ -1,9 +1,9 @@
-GDKstonesStoneDirectorySpec {
-	#name : 'default_seaside',
+GDKrowan3StoneDirectorySpec {
+	#name : 'default_rowan3',
 	#backups : 'backups',
 	#bin : 'bin',
 	#customenv : 'customenv',
-	#dbfSource : '$GEMSTONE/bin/extent0.seaside.dbf',
+	#dbfSource : '$GEMSTONE/bin/extent0.rowan3.dbf',
 	#extents : 'extents',
 	#logs : 'logs',
 	#netldiPort : 0,
@@ -11,5 +11,5 @@ GDKstonesStoneDirectorySpec {
 	#tranlogs : 'tranlogs',
 	#snapshots : 'snapshots',
 	#product : 'product',
-	#userId : 'DataCurator'
+	#userId : 'SystemUser'
 }
